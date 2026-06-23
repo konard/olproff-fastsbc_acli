@@ -1,0 +1,9 @@
+/build/
+/fastsbc-acli
+/audit/
+
+__pycache__/
+*.pyc
+
+/gen/go/**/*.pb.go
+/gen/go/**/*_grpc.pb.go

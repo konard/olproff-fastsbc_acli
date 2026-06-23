@@ -1,0 +1,41 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - issue-1-9720b6cd5104
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.x'
+
+      - name: Install protobuf tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler meson ninja-build
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+      - name: Check license headers
+        run: python3 scripts/update_license_header.py --dry-run
+
+      - name: Test license tool
+        run: python3 -m unittest discover -s scripts -p '*_test.py'
+
+      - name: Test Go packages
+        run: go test ./...
+
+      - name: Meson targets
+        run: |
+          meson setup build
+          ninja -C build check-license
+          ninja -C build go-test
+          ninja -C build generate-proto

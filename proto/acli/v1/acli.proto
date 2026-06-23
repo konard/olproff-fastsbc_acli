@@ -1,0 +1,67 @@
+// fastsbc_cli - Administration Command Line Interface (ACLI) Service for SBC.
+// Copyright (C) 2026 fastsbc
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+syntax = "proto3";
+
+package fastsbc.acli.v1;
+
+option go_package = "github.com/olproff/fastsbc_acli/gen/go/acli/v1;acliv1";
+
+service acli_service {
+  rpc execute_command(command_request) returns (command_response);
+  rpc commit_candidate(commit_request) returns (command_response);
+  rpc show_state(show_request) returns (show_response);
+}
+
+message command_request {
+  string trace_id = 1;
+  string username = 2;
+  string role = 3;
+  string raw_command = 4;
+  repeated string argv = 5;
+  map<string, string> candidate_changes = 6;
+}
+
+message commit_request {
+  string trace_id = 1;
+  string username = 2;
+  string role = 3;
+  string raw_command = 4;
+  map<string, string> candidate_changes = 5;
+}
+
+message show_request {
+  string trace_id = 1;
+  string username = 2;
+  string role = 3;
+  string raw_command = 4;
+  string topic = 5;
+}
+
+message command_response {
+  string trace_id = 1;
+  bool accepted = 2;
+  string output = 3;
+  string error_code = 4;
+  string error_message = 5;
+}
+
+message show_response {
+  string trace_id = 1;
+  string output = 2;
+  string error_code = 3;
+  string error_message = 4;
+}
