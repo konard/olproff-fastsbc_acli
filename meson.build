@@ -38,16 +38,18 @@ run_target(
 
 if protoc.found()
   gen_go_dir = meson.current_source_dir() / 'gen' / 'go'
+  proto_root = meson.current_source_dir() / 'proto'
+  proto_file = proto_root / 'acli' / 'v1' / 'acli.proto'
   run_target(
     'generate-proto',
     command: [
       protoc,
-      '-I', meson.current_source_dir() / 'proto',
+      '-I', proto_root,
       '--go_out=' + gen_go_dir,
       '--go_opt=paths=source_relative',
       '--go-grpc_out=' + gen_go_dir,
       '--go-grpc_opt=paths=source_relative',
-      files('proto/acli/v1/acli.proto'),
+      proto_file,
     ],
   )
 else

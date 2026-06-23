@@ -1,6 +1,7 @@
 /build/
 /fastsbc-acli
 /audit/
+/ci-logs/
 
 __pycache__/
 *.pyc
